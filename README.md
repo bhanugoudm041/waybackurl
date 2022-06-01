@@ -2,11 +2,11 @@
 Its a python script to get Urls
 It will give urls from waybackmachine 
 
-#Installing 
+# Installing 
 
 git clone https://github.com/bhanugoudm041/waybackurl.git
 
-#Running
+# Running
 
 python3 waybackurl.py  -u URL
 
