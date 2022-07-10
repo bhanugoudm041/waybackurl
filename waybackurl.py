@@ -29,25 +29,23 @@ def myProgram():
 		global dataLength; dataLength = len(urlParser(options.url))
 		global finalData; finalData = urlParser(options.url)
 
-		#loopint data
-		def dataPrint():
-			global i
+		#Data without file arguement
+		if options.filename == None:
 			for i in range(dataLength):
 				if i == 0:
 					pass
 				else:
 					print(finalData[i][2])
 
-		#Data without file arguement
-		if options.filename == None:
-			dataPrint()
-
 		#Data with file arguement
 		else:
-			dataPrint()
-			file = open(options.filename, "a")
-			file.write("\n" + finalData[i][2])
-			file.close()
+			for i in range(dataLength):
+				if i == 0:
+					pass
+				else:
+					file = open(options.filename, "a")
+					file.write('\n'+ finalData[i][2])
+					file.close()
 
 #Without banner
 if options.banner == None  or options.banner == "no" or options.banner == "No":
