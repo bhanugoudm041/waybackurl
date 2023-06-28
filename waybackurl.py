@@ -6,67 +6,42 @@
 import requests as re
 import optparse
 
-
 #Adding options
 parser = optparse.OptionParser()
-parser.add_option("-b","--banner",help="Print banner",dest="banner")
 parser.add_option("-u","--url",help="Enter a URL",dest="url")
 parser.add_option("-f","--file",help="Filename",dest="filename")
 (options, args) = parser.parse_args()
+#all urls list
+finalUrls=[]
 
-#Complete program in one function
-def myProgram():
-	#Without url arguement show error
-	if options.url == None:
-		print("Shutting down....! Please provide a url with arguements -u or --url")
+#Main class to get data
+class myProgram:
+	def __init__(self,url):
+		self.url=url
+	def urlParser(self):
+		data = re.get('http://web.archive.org/cdx/search/cdx?url=' + self.url + '/*&output=json&collapse=urlkey')
+		dataList = list(data.json())
+		finalUrls.append(dataList)
 
-	#With url arguement
+fetch=myProgram(options.url)
+
+#Handling data
+try:
+	if options.filename == None:
+		fetch.urlParser()
+		dataLength = len(finalUrls[0])
+		for i in range(1,dataLength):
+			url=finalUrls[0][i]
+			print(url[2])
+
 	else:
-		def urlParser(uRl):
-			data = re.get('http://web.archive.org/cdx/search/cdx?url=' + uRl + '/*&output=json&collapse=urlkey')
-			dataList = list(data.json())
-			return dataList
-		global dataLength; dataLength = len(urlParser(options.url))
-		global finalData; finalData = urlParser(options.url)
-
-		#Data without file arguement
-		if options.filename == None:
-			for i in range(dataLength):
-				if i == 0:
-					pass
-				else:
-					print(finalData[i][2])
-
-		#Data with file arguement
-		else:
-			for i in range(dataLength):
-				if i == 0:
-					pass
-				else:
-					file = open(options.filename, "a")
-					file.write('\n'+ finalData[i][2])
-					file.close()
-
-#Without banner
-if options.banner == None  or options.banner == "no" or options.banner == "No":
-	myProgram()
-
-#With Banner
-elif options.banner == "yes" or options.banner == "Yes":
-	print('''
-
-	██     ██  █████  ██    ██ ██████   █████   ██████ ██   ██ ██    ██ ██████  ██         ██████  ██    ██ 
-	██     ██ ██   ██  ██  ██  ██   ██ ██   ██ ██      ██  ██  ██    ██ ██   ██ ██         ██   ██  ██  ██  
-	██  █  ██ ███████   ████   ██████  ███████ ██      █████   ██    ██ ██████  ██         ██████    ████   
-	██ ███ ██ ██   ██    ██    ██   ██ ██   ██ ██      ██  ██  ██    ██ ██   ██ ██         ██         ██    
-	 ███ ███  ██   ██    ██    ██████  ██   ██  ██████ ██   ██  ██████  ██   ██ ███████ ██ ██         ██    
-
-	*************************************DEVELOPED BY BHANUGOUD*********************************************
-	********************************https://github.com/bhanugoudm041****************************************
-	.......................................For Ethical Hackers..............................................
-	
-	Please wait iam working......!
-	''')
-	myProgram()
-else:
-	print("Please choose Yes/No or else remove the --banner or -b arguement. It will output urls without banner")
+		fetch.urlParser()
+		dataLength = len(finalUrls[0])
+		for i in range(1,dataLength):
+			url=finalUrls[0][i]
+			file=open(options.filename, "a")
+			file.write(url[2]+'\n')
+			file.close()
+			print(url[2])
+except TypeError:
+	print("Run ./waybackurl.py --help or ./waybackurl.py -h")
